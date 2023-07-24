@@ -23,7 +23,6 @@ def stats():
              "states": storage.count('State'),
              "users": storage.count('User')}
     return jsonify(stats)
-=======
 #!/usr/bin/python3
 """
 Module for hbnb API api
@@ -49,4 +48,3 @@ def stats():
              "states": storage.count('State'),
              "users": storage.count('User')}
     return jsonify(stats)
->>>>>>> d052b17f39ccce2286468c0f3145313bedf7087c
