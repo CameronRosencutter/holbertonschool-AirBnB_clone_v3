@@ -31,3 +31,4 @@ def stats():
     }
     json_dict = json.dumps(dic, indent=2)
     return json_dict
+    
