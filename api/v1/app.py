@@ -1,37 +1,35 @@
 #!/usr/bin/python3
-"""
-Module for hbnb API api
-"""
-from flask import Flask, render_template, Blueprint, jsonify
+"""Script that starts a Flask app"""
+from flask import Flask, jsonify
 from flask_cors import CORS
 from models import storage
-import os
 from api.v1.views import app_views
+from os import getenv
+
+
+"""Start Flask"""
 app = Flask(__name__)
-cors = CORS(app, resources={'/*': {'origins': '0.0.0.0'}})
+
+"""Register the blueprint app_views"""
 app.register_blueprint(app_views)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+"""Create the CORS instance to allow IPs"""
+CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
 
 @app.teardown_appcontext
-def teardown_api(exception):
-    """After query return ends current session"""
-    return storage.close()
+def teardown(exception):
+    """Closes session"""
+    storage.close()
 
 
 @app.errorhandler(404)
-def not_found(exception):
-    """Handles page not found error"""
+def errorhandler(error):
+    """Returns a JSON-formated status code for errors"""
     return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
-    host = os.getenv('HBNB_API_HOST')
-    port = int(os.getenv('HBNB_API_PORT'))
-
-    """ os.environ['HBNB_API_HOST'] = '0.0.0.0'
-    host = '0.0.0.0'
-    os.environ['HBNB_API_PORT'] = '5000'
-    port = '5000'"""
-
-    app.run(host=host, port=port, threaded=True)
+    API_HOST = getenv("HBNB_API_HOST", "0.0.0.0")
+    API_PORT = getenv("HBNB_API_PORT", 5000)
+    app.run(host=API_HOST, port=API_PORT, threaded=True)
