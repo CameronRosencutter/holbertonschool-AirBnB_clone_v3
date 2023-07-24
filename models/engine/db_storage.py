@@ -3,22 +3,19 @@
 Contains the class DBStorage
 """
 
-from datetime import datetime
-import inspect
 import models
-from models.engine import db_storage
 from models.amenity import Amenity
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-import json
-import os
-import pep8
-import unittest
-DBStorage = db_storage.DBStorage
+from os import getenv
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
 classes = {"Amenity": Amenity, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
@@ -78,17 +75,23 @@ class DBStorage:
         """call remove() method on the private session attribute"""
         self.__session.remove()
 
-def get(self, cls, id):
-        '''method to retrieve one object'''
-        if cls and id:
-            tempo = cls, __name__ + "." + id
-            count = self.all(cls)
-            for key in count:
-                if key == tempo:
-                    return count[key]
-        else:
+    def get(self, cls, id):
+        """A method to get a single object by class and id #"""
+        if cls is None:
+            return None
+        if id is None:
             return None
 
-def count(self, cls=None):
-        '''class (optional)'''
-        return (len(self.all(cls)))
+        all_objs = self.all(cls)
+        for obj in all_objs.values():
+            if obj.id == id:
+                return obj
+        return None
+
+    def count(self, cls=None):
+        """
+        A method to count the number of objects in storage,
+        if class supplied count of instances of that class
+        """
+        item_keys = self.all(cls).keys()
+        return len(item_keys)

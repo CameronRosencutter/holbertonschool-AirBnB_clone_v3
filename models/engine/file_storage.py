@@ -3,10 +3,7 @@
 Contains the FileStorage class
 """
 
-from datetime import datetime
-import inspect
-import models
-from models.engine import db_storage
+import json
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
@@ -14,11 +11,6 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-import json
-import os
-import pep8
-import unittest
-DBStorage = db_storage.DBStorage
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -77,15 +69,24 @@ class FileStorage:
         """call reload() method for deserializing the JSON file to objects"""
         self.reload()
 
-def get(self, cls, id):
-        '''object to get'''
-        if cls and id:
-            takeObj = '{}.{}'.format(cls, id)
-            everyObj = self.all(cls)
-            return everyObj.get(takeObj)
-        else:
+    def get(self, cls, id):
+        """A method to get a single object by class and id #"""
+        if cls is None:
+            return None
+        if id is None:
             return None
 
-def count(self, cls=None):
-        '''class that is (optional)'''
-        return (len(self.all(cls)))
+        all_objs = self.all(cls)
+        for obj in all_objs.values():
+            if obj.id == id:
+                return obj
+        return None
+
+    def count(self, cls=None):
+        """
+        A method to count the number of objects in storage,
+        if class supplied count of instances of that class
+        """
+
+        item_keys = self.all(cls).keys()
+        return len(item_keys)
