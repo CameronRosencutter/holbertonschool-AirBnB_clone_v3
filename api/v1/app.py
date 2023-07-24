@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Script that starts a Flask app"""
+"""Script that starts a Flask app
+"""
 from flask import Flask, jsonify
 from flask_cors import CORS
 from models import storage
